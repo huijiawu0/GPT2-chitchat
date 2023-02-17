@@ -394,7 +394,7 @@ def main():
     if args.pretrained_model:  # 加载预训练模型
         model = GPT2LMHeadModel.from_pretrained(args.pretrained_model)
     else:  # 初始化模型
-        model_config = GPT2Config.from_json_file(args.model_config)
+        model_config = GPT2Config.from_json_file(args.model_config, cache_dir='.')
         model = GPT2LMHeadModel(config=model_config)
     model = model.to(device)
     logger.info('model config:\n{}'.format(model.config.to_json_string()))
