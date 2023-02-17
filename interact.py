@@ -139,11 +139,11 @@ def main():
                 samples_file.write("user:{}\n".format(text))
             text_ids = tokenizer.encode(text, add_special_tokens=False)
             history.append(text_ids)
-            input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
+            input_ids = [tokenizer.all_special_ids[0]]  # 每个input以[CLS]为开头
 
             for history_id, history_utr in enumerate(history[-args.max_history_len:]):
                 input_ids.extend(history_utr)
-                input_ids.append(tokenizer.sep_token_id)
+                input_ids.append(tokenizer.all_special_ids[0])
             input_ids = torch.tensor(input_ids).long().to(device)
             input_ids = input_ids.unsqueeze(0)
             response = []  # 根据context，生成的response
@@ -161,7 +161,7 @@ def main():
                 filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=args.topk, top_p=args.topp)
                 # torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标
                 next_token = torch.multinomial(F.softmax(filtered_logits, dim=-1), num_samples=1)
-                if next_token == tokenizer.sep_token_id:  # 遇到[SEP]则表明response生成结束
+                if next_token == tokenizer.all_special_ids[0]:  # 遇到[SEP]则表明response生成结束
                     break
                 response.append(next_token.item())
                 input_ids = torch.cat((input_ids, next_token.unsqueeze(0)), dim=1)
