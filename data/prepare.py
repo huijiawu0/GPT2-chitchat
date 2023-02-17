@@ -1,7 +1,7 @@
 import json
 
 
-with open('qadata.json', 'r') as f, open('qadata1.txt', 'w') as g:
+with open('qadata.json', 'r') as f, open('train.txt', 'w') as g:
     for line in f:
         jr = json.loads(line.strip())
         q = jr['question'].strip()
