@@ -152,7 +152,8 @@ def train_epoch(model, train_dataloader, optimizer, scheduler, logger,
     # epoch_correct_num:每个epoch中,output预测正确的word的数量
     # epoch_total_num: 每个epoch中,output预测的word的总数量
     epoch_correct_num, epoch_total_num = 0, 0
-
+    
+    total_batch = len(train_dataloader)
     for batch_idx, (input_ids, labels) in enumerate(train_dataloader):
         # 捕获cuda out of memory exception
         try:
@@ -190,8 +191,8 @@ def train_epoch(model, train_dataloader, optimizer, scheduler, logger,
 
             if (batch_idx + 1) % args.log_step == 0:
                 logger.info(
-                    "batch {} of epoch {}, loss {}, batch_acc {}, lr {}".format(
-                        batch_idx + 1, epoch + 1, loss.item() * args.gradient_accumulation_steps, batch_acc, scheduler.get_lr()))
+                    "batch {}/{} of epoch {}, loss {}, batch_acc {}, lr {}".format(
+                        batch_idx + 1, total_batch, epoch + 1, loss.item() * args.gradient_accumulation_steps, batch_acc, scheduler.get_lr()))
 
             del input_ids, outputs
 
