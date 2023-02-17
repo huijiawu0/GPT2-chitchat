@@ -54,9 +54,9 @@ def preprocess():
     logger = create_logger(args.log_path)
 
     # 初始化tokenizer
-    tokenizer = BertTokenizerFast(vocab_file=args.vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
-    sep_id = tokenizer.sep_token_id
-    cls_id = tokenizer.cls_token_id
+    tokenizer = GPT2TokenizerFast.from_pretrained("IDEA-CCNL/Wenzhong2.0-GPT2-3.5B-chinese")
+    sep_id = tokenizer.all_special_ids[0]
+    cls_id = tokenizer.all_special_ids[0]
     logger.info("preprocessing data,data path:{}, save path:{}".format(args.train_path, args.save_path))
 
     # 读取训练数据集

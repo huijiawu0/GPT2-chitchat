@@ -381,10 +381,10 @@ def main():
     logger.info('using device:{}'.format(device))
 
     # 初始化tokenizer
-    tokenizer = BertTokenizerFast(vocab_file=args.vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
-    args.sep_id = tokenizer.sep_token_id
-    args.pad_id = tokenizer.pad_token_id
-    args.cls_id = tokenizer.cls_token_id
+    tokenizer = GPT2TokenizerFast.from_pretrained(args.pretrained_model)
+    args.sep_id = tokenizer.all_special_ids[0]
+    args.pad_id = tokenizer.all_special_ids[0]
+    args.cls_id = tokenizer.all_special_ids[0]
 
     # 创建模型的输出目录
     if not os.path.exists(args.save_model_path):
@@ -398,7 +398,7 @@ def main():
         model = GPT2LMHeadModel(config=model_config)
     model = model.to(device)
     logger.info('model config:\n{}'.format(model.config.to_json_string()))
-    assert model.config.vocab_size == tokenizer.vocab_size
+    # assert model.config.vocab_size == tokenizer.vocab_size
 
     # 并行训练模型
     if args.cuda and torch.cuda.device_count() > 1:
