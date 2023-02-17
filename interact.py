@@ -10,7 +10,7 @@ from datetime import datetime
 from tqdm import tqdm
 from torch.nn import DataParallel
 import logging
-from transformers import GPT2TokenizerFast, GPT2LMHeadModel, GPT2Config
+from transformers import GPT2TokenizerFast, GPT2LMHeadModel, GPT2Config, GPT2Tokenizer
 from transformers import BertTokenizerFast
 # from transformers import BertTokenizer
 from os.path import join, exists
@@ -117,8 +117,8 @@ def main():
     device = 'cuda' if args.cuda else 'cpu'
     logger.info('using device:{}'.format(device))
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
-    tokenizer = BertTokenizerFast(vocab_file=args.vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
-    # tokenizer = BertTokenizer(vocab_file=args.voca_path)
+    # tokenizer = BertTokenizerFast(vocab_file=args.vocab_path, sep_token="[SEP]", pad_token="[PAD]", cls_token="[CLS]")
+    tokenizer = GPT2Tokenizer.from_pretrained(args.model_path)
     model = GPT2LMHeadModel.from_pretrained(args.model_path)
     model = model.to(device)
     model.eval()
